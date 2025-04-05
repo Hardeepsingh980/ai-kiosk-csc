@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import Vapi from '@vapi-ai/web'
 import { Mic, MicOff } from "lucide-react"
 import Avatar from "@/components/avatar"
 import TopBar from "@/components/top-bar"
@@ -13,42 +14,73 @@ export default function CSCKiosk() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [response, setResponse] = useState("")
   const [currentState, setCurrentState] = useState<"default" | "listening" | "processing" | "response">("default")
+  const [vapi] = useState(() => new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY!))
+
+  useEffect(() => {
+    const handleCallStart = () => {
+      console.log("Call started");
+      setIsListening(true)
+      setCurrentState("listening")
+    }
+
+    const handleCallEnd = () => {
+      console.log("Call ended");
+      setIsListening(false)
+      setIsProcessing(false)
+      setCurrentState("default")
+    }
+
+    const handleSpeechStart = () => {
+      console.log("Speech started");
+      setIsProcessing(false)
+    }
+    const handleSpeechEnd = () => {
+      console.log("Speech ended");
+      setIsProcessing(true)
+    }
+    
+    const handleMessage = (message: any) => {
+      console.log(`Message received: ${message.content}`);
+      if (message.role === 'assistant' && message.type === 'conversation-update') {
+        setResponse(message.content)
+        setCurrentState("response")
+      }
+    }
+
+    const handleError = (error: any) => {
+      console.error(`Error received: ${error.message}`);
+      if (error.message === "Meeting has ended") {
+        setIsListening(false)
+        setIsProcessing(false)
+        setCurrentState("default")
+      }
+    }
+
+    vapi.on('call-start', handleCallStart)
+    vapi.on('call-end', handleCallEnd)
+    vapi.on('speech-start', handleSpeechStart)
+    vapi.on('speech-end', handleSpeechEnd)
+    vapi.on('message', handleMessage)
+    vapi.on('error', handleError)
+
+    return () => {
+      vapi.off('call-start', handleCallStart)
+      vapi.off('call-end', handleCallEnd)
+      vapi.off('speech-start', handleSpeechStart)
+      vapi.off('speech-end', handleSpeechEnd)
+      vapi.off('message', handleMessage)
+      vapi.off('error', handleError)
+    }
+  }, [vapi])
 
   const startListening = () => {
-    setIsListening(true)
-    setCurrentState("listening")
-
-    // Simulate processing after 3 seconds
-    setTimeout(() => {
-      setIsListening(false)
-      setIsProcessing(true)
-      setCurrentState("processing")
-
-      // Simulate response after 2 more seconds
-      setTimeout(() => {
-        setIsProcessing(false)
-        setResponse(
-          `सरकारी योजनाओं के बारे में आपके अनुरोधित जानकारी:
-प्रधानमंत्री जन धन योजना (PMJDY) सभी परिवारों को बैंकिंग सेवाएं प्रदान करती है।
-आप केवल अपने आधार कार्ड के साथ किसी भी बैंक शाखा या सीएससी केंद्र पर शून्य शेष वाला खाता खोल सकते हैं।`
-        )
-        setCurrentState("response")
-
-        // Return to default state after 10 seconds
-        setTimeout(() => {
-          setCurrentState("default")
-          setResponse("")
-        }, 10000)
-      }, 2000)
-    }, 3000)
+    console.log("Starting to listen");
+    vapi.start('3c7f64b9-b77b-4fa5-9c1a-69bc51070119')
   }
 
   const stopListening = () => {
-    if (isListening) {
-      setIsListening(false)
-      setIsProcessing(true)
-      setCurrentState("processing")
-    }
+    console.log("Stopping to listen");
+    vapi.stop()
   }
 
   return (
@@ -67,15 +99,12 @@ export default function CSCKiosk() {
                   ? "bg-red-500 hover:bg-red-600 animate-pulse"
                   : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
               }`}
-              onMouseDown={startListening}
-              onMouseUp={stopListening}
-              onTouchStart={startListening}
-              onTouchEnd={stopListening}
+              onClick={isListening ? stopListening : startListening}
             >
               {isListening ? <Mic className="h-8 w-8 text-white" /> : <MicOff className="h-8 w-8 text-white" />}
             </button>
             <p className="absolute -bottom-8 text-center font-medium">
-              {isListening ? "Release to stop" : "Press to speak"}
+              {isListening ? "Press to Stop" : "Press to Start"}
             </p>
           </div>
         </div>
