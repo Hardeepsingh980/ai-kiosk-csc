@@ -60,6 +60,7 @@ export default function AIHelpdeskKiosk() {
             setIsListening(false)
             setIsProcessing(false)
             setIsAgentConnected(false)
+            setIsConnecting(false)
             setMessages(["How I can help you"])
           }
         }, 5000)
@@ -193,13 +194,7 @@ export default function AIHelpdeskKiosk() {
               isListening ? "bg-red-500 hover:bg-red-600 animate-pulse" : "bg-orange-500 hover:bg-orange-600"
             }`}
           >
-            {isConnecting ? (
-              <div className="animate-spin">
-                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v4m0 0v4m0-4h4m-4 0H8" />
-                </svg>
-              </div>
-            ) : isProcessing ? (
+            {isProcessing ? (
               <div className="animate-spin">
                 <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
