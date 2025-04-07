@@ -57,6 +57,10 @@ export default function AIHelpdeskKiosk() {
         inactivityTimeout.current = setTimeout(() => {
           if (isAgentConnected) {
             vapi.stop()
+            setIsListening(false)
+            setIsProcessing(false)
+            setIsAgentConnected(false)
+            setMessages(["How I can help you"])
           }
         }, 5000)
 
