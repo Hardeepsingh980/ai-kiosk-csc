@@ -3,7 +3,7 @@
 import { Mic, Loader2 } from "lucide-react"
 
 interface VoicePanelProps {
-  state: "listening" | "processing" | "response"
+  state: "connecting" | "listening" | "processing" | "response"
   isListening: boolean
   isProcessing: boolean
   response: string
@@ -12,6 +12,19 @@ interface VoicePanelProps {
 export default function VoicePanel({ state, isListening, isProcessing, response }: VoicePanelProps) {
   return (
     <div className="h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-white to-blue-50">
+      {state === "connecting" && (
+        <div className="flex flex-col items-center gap-6">
+          <div className="relative">
+            <div className="absolute inset-0 bg-yellow-500 rounded-full opacity-10 blur-3xl animate-pulse"></div>
+            <Loader2 size={80} className="text-yellow-600 animate-spin" />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <h2 className="text-2xl font-bold text-gray-800">Connecting...</h2>
+            <p className="text-gray-600">Please wait while we establish connection</p>
+          </div>
+        </div>
+      )}
+
       {state === "listening" && (
         <div className="flex flex-col items-center gap-6">
           <div className="relative">
@@ -23,6 +36,13 @@ export default function VoicePanel({ state, isListening, isProcessing, response 
             <h2 className="text-2xl font-bold text-gray-800">Listening...</h2>
             <p className="text-gray-600">Speak clearly into the microphone</p>
           </div>
+          
+          {response && (
+            <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100 mt-4 max-w-md">
+              <p className="text-lg leading-relaxed text-gray-700">{response}</p>
+            </div>
+          )}
+
           <div className="flex gap-2 mt-4">
             {[...Array(7)].map((_, i) => (
               <div
@@ -48,6 +68,12 @@ export default function VoicePanel({ state, isListening, isProcessing, response 
             <h2 className="text-2xl font-bold text-gray-800">Processing your request...</h2>
             <p className="text-gray-600">Please wait a moment</p>
           </div>
+          
+          {response && (
+            <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100 mt-4 max-w-md">
+              <p className="text-lg leading-relaxed text-gray-700">{response}</p>
+            </div>
+          )}
         </div>
       )}
 

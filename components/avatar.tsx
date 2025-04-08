@@ -5,7 +5,7 @@ export default function Avatar() {
     <div className="relative flex flex-col items-center">
       <div className="w-80 h-80 relative">
         <div className="absolute inset-0 bg-blue-500 rounded-full opacity-10 blur-2xl"></div>
-        <Image src="/avatar.png" alt="Virtual Assistant" fill priority className="object-contain" />
+        <Image src="/avatar_2.png" alt="Virtual Assistant" fill priority className="object-contain" />
       </div>
 
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-2xl mt-4 shadow-md">

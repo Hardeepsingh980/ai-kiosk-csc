@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Vapi from '@vapi-ai/web'
 import { Mic, MicOff } from "lucide-react"
 import Avatar from "@/components/avatar"
@@ -12,14 +12,17 @@ import NewsTicker from "@/components/news-ticker"
 export default function CSCKiosk() {
   const [isListening, setIsListening] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isConnecting, setIsConnecting] = useState(false)
   const [response, setResponse] = useState("")
-  const [currentState, setCurrentState] = useState<"default" | "listening" | "processing" | "response">("default")
+  const [currentState, setCurrentState] = useState<"default" | "connecting" | "listening" | "processing" | "response">("default")
   const [vapi] = useState(() => new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY!))
+  const inactivityTimeout = useRef<NodeJS.Timeout | undefined>(undefined)
 
   useEffect(() => {
     const handleCallStart = () => {
       console.log("Call started");
       setIsListening(true)
+      setIsConnecting(false)
       setCurrentState("listening")
     }
 
@@ -27,7 +30,10 @@ export default function CSCKiosk() {
       console.log("Call ended");
       setIsListening(false)
       setIsProcessing(false)
+      setIsConnecting(false)
       setCurrentState("default")
+      setResponse("")
+      clearTimeout(inactivityTimeout.current)
     }
 
     const handleSpeechStart = () => {
@@ -40,10 +46,26 @@ export default function CSCKiosk() {
     }
     
     const handleMessage = (message: any) => {
-      console.log(`Message received: ${message.content}`);
-      if (message.role === 'assistant' && message.type === 'conversation-update') {
-        setResponse(message.content)
-        setCurrentState("response")
+      console.log(`Message received:`, message);
+      
+      // Reset inactivity timeout on any message
+      clearTimeout(inactivityTimeout.current)
+      inactivityTimeout.current = setTimeout(() => {
+        if (isListening) {
+          vapi.stop()
+        }
+      }, 5000)
+
+      if (message.role === 'assistant') {
+        if (message.type === 'transcript') {
+          // Show live transcription
+          setResponse(message.transcript)
+          setCurrentState("listening")
+        } else if (message.type === 'conversation-update') {
+          // Show final response
+          setResponse(message.content)
+          setCurrentState("response")
+        }
       }
     }
 
@@ -52,7 +74,10 @@ export default function CSCKiosk() {
       if (error.message === "Meeting has ended") {
         setIsListening(false)
         setIsProcessing(false)
+        setIsConnecting(false)
         setCurrentState("default")
+        setResponse("")
+        clearTimeout(inactivityTimeout.current)
       }
     }
 
@@ -70,11 +95,14 @@ export default function CSCKiosk() {
       vapi.off('speech-end', handleSpeechEnd)
       vapi.off('message', handleMessage)
       vapi.off('error', handleError)
+      clearTimeout(inactivityTimeout.current)
     }
-  }, [vapi])
+  }, [vapi, isListening])
 
   const startListening = () => {
     console.log("Starting to listen");
+    setIsConnecting(true)
+    setCurrentState("connecting")
     vapi.start('3c7f64b9-b77b-4fa5-9c1a-69bc51070119')
   }
 
@@ -95,16 +123,25 @@ export default function CSCKiosk() {
           <div className="absolute bottom-8 w-full flex justify-center">
             <button
               className={`rounded-full p-6 shadow-lg flex items-center justify-center transition-all ${
-                isListening
-                  ? "bg-red-500 hover:bg-red-600 animate-pulse"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                isConnecting
+                  ? "bg-yellow-500 hover:bg-yellow-600 animate-pulse"
+                  : isListening
+                    ? "bg-red-500 hover:bg-red-600 animate-pulse"
+                    : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
               }`}
               onClick={isListening ? stopListening : startListening}
+              disabled={isConnecting}
             >
-              {isListening ? <Mic className="h-8 w-8 text-white" /> : <MicOff className="h-8 w-8 text-white" />}
+              {isConnecting ? (
+                <div className="h-8 w-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
+              ) : isListening ? (
+                <Mic className="h-8 w-8 text-white" />
+              ) : (
+                <MicOff className="h-8 w-8 text-white" />
+              )}
             </button>
             <p className="absolute -bottom-8 text-center font-medium">
-              {isListening ? "Press to Stop" : "Press to Start"}
+              {isConnecting ? "Connecting..." : isListening ? "Press to Stop" : "Press to Start"}
             </p>
           </div>
         </div>
@@ -112,7 +149,7 @@ export default function CSCKiosk() {
         {/* Right Panel - Content */}
         <div className="w-3/5 bg-white">
           {currentState === "default" && <Carousel />}
-          {(currentState === "listening" || currentState === "processing" || currentState === "response") && (
+          {(currentState === "connecting" || currentState === "listening" || currentState === "processing" || currentState === "response") && (
             <VoicePanel
               state={currentState}
               isListening={isListening}
