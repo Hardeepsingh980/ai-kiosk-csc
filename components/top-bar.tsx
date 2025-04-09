@@ -24,16 +24,25 @@ export default function TopBar() {
             <Clock className="h-6 w-6 text-blue-200" />
             <div className="text-base">
               <p className="font-semibold">Working Hours</p>
-              <p>Monday to Saturday: 9:00 am to 6:00 pm</p>
+              <p>Monday to Saturday: 9:00 am to 7:00 pm</p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <Phone className="h-6 w-6 text-blue-200" />
+            <div className="flex items-center gap-2 pt-4">
+              <Phone className="h-6 w-6 text-blue-200" />
+              <Image
+                src="https://static-00.iconduck.com/assets.00/whatsapp-icon-2040x2048-8b5th74o.png"
+                alt="WhatsApp"
+                width={24}
+                height={24}
+                className="object-contain"
+              />
+            </div>
             <div className="text-base">
               <p className="font-semibold">Contact Us</p>
-              <p>Toll Free: 1800-123-4567</p>
-              <p>Mobile: +91 98765 43210</p>
+              <p>+91 99156-57570</p>
+              <p>+91 78375-31988</p>
             </div>
           </div>
         </div>

@@ -3,13 +3,11 @@
 import { useEffect, useRef, useState } from "react"
 
 const newsItems = [
-  "New Aadhaar enrollment center opened in Sector 15 • ",
-  "Digital literacy workshops starting next week • ",
-  "Government launches new healthcare scheme for senior citizens • ",
-  "CSC centers to offer passport services from next month • ",
-  "Free computer training for women entrepreneurs • ",
-  "Last date for PAN-Aadhaar linking extended • ",
-  "New mobile app launched for CSC services • ",
+  "Contact us: +91 99156-57570, +91 78375-31988 • ",
+  "WhatsApp available for quick support • ",
+  "Email us at cscjassian@gmail.com • ",
+  "Professional CCTV installation and services available • ",
+  "Custom printing services - Cups, T-shirts, Photo frames • "
 ]
 
 export default function NewsTicker() {
@@ -22,11 +20,11 @@ export default function NewsTicker() {
   }, [])
 
   return (
-    <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-2 overflow-hidden">
+    <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-4 overflow-hidden">
       <div className="relative flex">
         <div ref={scrollRef} className="whitespace-nowrap animate-ticker flex items-center">
           {duplicatedNews.map((item, index) => (
-            <span key={index} className="text-sm font-medium px-2">
+            <span key={index} className="text-lg font-medium px-2">
               {item}
             </span>
           ))}
