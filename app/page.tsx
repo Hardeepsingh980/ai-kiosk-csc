@@ -124,17 +124,51 @@ export default function CSCKiosk() {
   }
 
   return (
-    <main className="flex flex-col h-screen bg-gray-50 overflow-hidden">
+    <main className="flex flex-col h-screen max-h-[1280px] w-full max-w-[720px] mx-auto bg-gray-50 overflow-hidden">
       <TopBar />
 
-      <div className="flex flex-1 overflow-hidden mb-12">
-        {/* Left Panel - Avatar */}
-        <div className="w-2/5 flex flex-col items-center justify-center relative bg-gradient-to-br from-white to-blue-50 p-4 shadow-sm">
-          <Avatar />
+      {/* Portrait Layout Structure */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+        {/* Top Section - Carousel (Advertisement) */}
+        <div className="w-full h-[420px] bg-white shadow-sm">
+          {currentState === "default" ? <Carousel /> : null}
+        </div>
 
-          <div className="absolute bottom-8 w-full flex justify-center">
+        {/* Middle Section - Content Area & Assistant */}
+        <div className="w-full flex-1 bg-white overflow-hidden flex flex-col items-center justify-center">
+          {(currentState === "connecting" || currentState === "listening" || currentState === "processing" || currentState === "response") && (
+            <VoicePanel
+              state={currentState}
+              isListening={isListening}
+              isProcessing={isProcessing}
+              response={response}
+            />
+          )}
+
+          {currentState === "default" && (
+            <div className="h-full flex flex-col items-center justify-center p-4 bg-gradient-to-b from-white to-blue-50 w-full">
+              <div className="text-center mb-6">
+                <h2 className="text-4xl font-bold text-gray-800 mb-2">Welcome to CSC Kiosk</h2>
+                <p className="text-xl text-gray-600 mt-2">Click the button below to start your interaction</p>
+                <p className="text-xl text-gray-600 mt-2">अपनी बातचीत शुरू करने के लिए नीचे दिए गए बटन पर क्लिक करें</p>
+              </div>
+              
+              {/* Enhanced AI Assistant Container - Optimized for 720x1280 */}
+              <div className="relative w-[700px] h-[700px] flex flex-col items-center justify-center mb-4">
+                {/* Avatar wrapper with fixed size for 720x1280 */}
+                <div className="relative w-[500px] h-[500px] z-10">
+                  <Avatar />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Section - Helpdesk/Interaction */}
+        {/* <div className="w-full h-[120px] bg-gradient-to-b from-blue-50 to-white py-4 shadow-inner flex items-center justify-center">
+          <div className="flex flex-col items-center">
             <button
-              className={`rounded-full p-6 shadow-lg flex items-center justify-center transition-all ${
+              className={`rounded-full p-5 shadow-lg flex items-center justify-center transition-all ${
                 isConnecting
                   ? "bg-yellow-500 hover:bg-yellow-600 animate-pulse"
                   : isListening
@@ -152,27 +186,14 @@ export default function CSCKiosk() {
                 <MicOff className="h-8 w-8 text-white" />
               )}
             </button>
-            <p className="absolute -bottom-8 text-center font-medium">
+            <p className="mt-2 text-center font-medium text-sm text-gray-700">
               {isConnecting ? "Connecting..." : isListening ? "Press to Stop" : "Press to Start"}
             </p>
           </div>
-        </div>
-
-        {/* Right Panel - Content */}
-        <div className="w-3/5 bg-white">
-          {currentState === "default" && <Carousel />}
-          {(currentState === "connecting" || currentState === "listening" || currentState === "processing" || currentState === "response") && (
-            <VoicePanel
-              state={currentState}
-              isListening={isListening}
-              isProcessing={isProcessing}
-              response={response}
-            />
-          )}
-        </div>
+        </div> */}
       </div>
 
-      {/* News Ticker */}
+      {/* News Ticker at bottom */}
       <NewsTicker />
     </main>
   )

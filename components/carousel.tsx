@@ -127,19 +127,9 @@ export default function Carousel() {
     return () => clearInterval(interval)
   }, [])
 
-  const goToPrevious = () => {
-    setCurrentBanner((prev) => (prev - 1 + banners.length) % banners.length)
-  }
-
-  const goToNext = () => {
-    setCurrentBanner((prev) => (prev + 1) % banners.length)
-  }
-
   return (
     <div className="h-full relative flex flex-col">
-      <div className="flex-1 flex items-center justify-center relative overflow-hidden">
-       
-
+      <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-blue-50 to-white">
         {banners.map((banner, index) => (
           <div
             key={banner.id}
@@ -151,30 +141,45 @@ export default function Carousel() {
                   : "opacity-0 translate-x-full"
             }`}
           >
-            <div className="h-full flex flex-col md:flex-row items-center bg-gradient-to-br from-white to-gray-50">
-              <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
-                <div className="inline-flex gap-2 mb-6">
-                  <span className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full text-lg font-medium shadow-md">
-                    🎉 New Service
+            <div className="h-full flex items-center p-6">
+              {/* Content on left side */}
+              <div className="w-3/5 pr-6 space-y-4">
+                <div className="inline-flex gap-2 mb-2">
+                  <span className="px-3 py-1 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-full text-sm font-medium shadow-md flex items-center">
+                    <span className="mr-1">🎉</span> New Service
                   </span>
                 </div>
-                <div className="space-y-4">
-                  <h2 className="text-3xl font-bold text-gray-900">{banner.title}</h2>
-                  <p className="text-2xl font-bold text-gray-800">{banner.description}</p>
-                  <p className="text-2xl font-bold text-gray-800">{banner.punjabi}</p>
+                
+                <h2 className="text-2xl font-bold text-gray-900 leading-tight">{banner.title}</h2>
+                
+                <div className="space-y-2 mt-4">
+                  <div className="p-3 bg-white rounded-lg shadow-sm border-l-4 border-blue-600">
+                    <p className="text-lg font-medium text-gray-800">{banner.description}</p>
+                  </div>
+                  
+                  <div className="p-3 bg-white rounded-lg shadow-sm border-l-4 border-green-600">
+                    <p className="text-lg font-medium text-gray-800">{banner.punjabi}</p>
+                  </div>
                 </div>
-             
+                
+                <div className="pt-4">
+                  <div className="h-1.5 w-16 bg-gradient-to-r from-blue-500 to-blue-700 rounded-full"></div>
+                </div>
               </div>
-              <div className="w-full md:w-1/2 p-6 flex items-center justify-center">
-                <div className="relative w-full h-72 md:h-96 rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+              
+              {/* Image on right side */}
+              <div className="w-2/5 flex justify-center items-center">
+                <div className="relative w-[240px] h-[240px] rounded-xl overflow-hidden shadow-xl">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 to-white/20 z-10"></div>
                   <Image 
                     src={banner.image || "/placeholder.svg"} 
                     alt={banner.title} 
                     fill 
-                    className="object-cover"
+                    className="object-cover z-0"
+                    sizes="240px"
                     priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-20"></div>
                 </div>
               </div>
             </div>
@@ -182,19 +187,21 @@ export default function Carousel() {
         ))}
       </div>
 
-      <div className="flex justify-center gap-3 p-6">
-        {banners.map((_, index) => (
-          <button
-            key={index}
-            className={`h-3 rounded-full transition-all ${
-              index === currentBanner 
-                ? "w-8 bg-gradient-to-r from-blue-600 to-blue-700" 
-                : "w-3 bg-gray-300 hover:bg-gray-400"
-            }`}
-            onClick={() => setCurrentBanner(index)}
-            aria-label={`Go to banner ${index + 1}`}
-          />
-        ))}
+      {/* Progress indicators */}
+      <div className="py-4 bg-white border-t border-gray-100">
+        <div className="flex justify-center gap-2 px-4">
+          {banners.map((_, index) => (
+            <div
+              key={index}
+              className={`h-2 rounded-full transition-all ${
+                index === currentBanner 
+                  ? "w-8 bg-gradient-to-r from-blue-600 to-blue-700" 
+                  : "w-2 bg-gray-200"
+              }`}
+              aria-label={`Banner ${index + 1} of ${banners.length}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
