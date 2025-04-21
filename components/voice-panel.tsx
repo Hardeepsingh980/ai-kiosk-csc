@@ -19,8 +19,9 @@ export default function VoicePanel({ state, isListening, isProcessing, response 
             <Loader2 size={80} className="text-yellow-600 animate-spin" />
           </div>
           <div className="flex flex-col items-center gap-2">
-            <h2 className="text-2xl font-bold text-gray-800">Connecting...</h2>
-            <p className="text-gray-600">Please wait while we establish connection</p>
+            <h2 className="text-4xl font-bold text-gray-800">Connecting...</h2>
+            <p className="text-gray-600 text-lg">We are establishing a connection. Please wait for the greeting before speaking.</p>
+            <p className="text-gray-600 text-lg">हम कनेक्शन स्थापित कर रहे हैं। कृपया अभिवादन के बाद ही बोलें।</p>
           </div>
         </div>
       )}
@@ -33,8 +34,9 @@ export default function VoicePanel({ state, isListening, isProcessing, response 
             <div className="absolute inset-0 rounded-full border-4 border-blue-500 animate-ping opacity-20"></div>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <h2 className="text-2xl font-bold text-gray-800">Listening...</h2>
-            <p className="text-gray-600">Speak clearly into the microphone</p>
+            <h2 className="text-4xl font-bold text-gray-800">Listening...</h2>
+            <p className="text-gray-600 text-lg">You may speak now. Please speak clearly into the microphone.</p>
+            <p className="text-gray-600 text-lg">अब आप बोल सकते हैं। कृपया स्पष्ट रूप से माइक्रोफोन में बोलें।</p>
           </div>
           
           {response && (
@@ -65,20 +67,20 @@ export default function VoicePanel({ state, isListening, isProcessing, response 
             <Loader2 size={80} className="text-blue-600 animate-spin" />
           </div>
           <div className="flex flex-col items-center gap-2">
-            <h2 className="text-2xl font-bold text-gray-800">Processing your request...</h2>
-            <p className="text-gray-600">Please wait a moment</p>
+            <h2 className="text-4xl font-bold text-gray-800">Processing your request...</h2>
+            <p className="text-gray-600 text-lg">Please wait a moment</p>
           </div>
           
           {response && (
-            <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100 mt-4 max-w-md">
-              <p className="text-lg leading-relaxed text-gray-700">{response}</p>
+            <div className="bg-white p-5 rounded-xl shadow-md border border-gray-100 mt-4 max-w-lg">
+              <p className="text-xl leading-relaxed text-gray-700">{response}</p>
             </div>
           )}
         </div>
       )}
 
       {state === "response" && (
-        <div className="flex flex-col items-center gap-6 max-w-2xl">
+        <div className="flex flex-col items-center gap-6 max-w-3xl">
           <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -91,14 +93,13 @@ export default function VoicePanel({ state, isListening, isProcessing, response 
             </svg>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <h2 className="text-2xl font-bold text-gray-800">Here's what I found</h2>
+            <h2 className="text-3xl font-bold text-gray-800">Here's what I found</h2>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-            <p className="text-lg leading-relaxed text-gray-700">{response}</p>
+          <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100 w-full">
+            <p className="text-xl leading-relaxed text-gray-700">{response}</p>
           </div>
         </div>
       )}
     </div>
   )
 }
-

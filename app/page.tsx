@@ -129,13 +129,15 @@ export default function CSCKiosk() {
 
       {/* Portrait Layout Structure */}
       <div className="flex flex-col flex-1 overflow-hidden">
-        {/* Top Section - Carousel (Advertisement) */}
-        <div className="w-full h-[420px] bg-white shadow-sm">
-          {currentState === "default" ? <Carousel /> : null}
-        </div>
+        {/* Only show Carousel in default state */}
+        {currentState === "default" && (
+          <div className="w-full h-[420px] bg-white shadow-sm">
+            <Carousel />
+          </div>
+        )}
 
         {/* Middle Section - Content Area & Assistant */}
-        <div className="w-full flex-1 bg-white overflow-hidden flex flex-col items-center justify-center">
+        <div className={`w-full ${currentState === "default" ? "flex-1" : "h-full"} bg-white overflow-hidden flex flex-col items-center justify-center`}>
           {(currentState === "connecting" || currentState === "listening" || currentState === "processing" || currentState === "response") && (
             <VoicePanel
               state={currentState}
