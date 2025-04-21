@@ -88,6 +88,17 @@ export default function CSCKiosk() {
     vapi.on('message', handleMessage)
     vapi.on('error', handleError)
 
+    // Add global click handler to start listening
+    const handleGlobalClick = (e: MouseEvent) => {
+      if (e.button === 0 && !isListening && !isConnecting) {
+        startListening();
+      } else if (e.button === 0 && isListening) {
+        stopListening();
+      }
+    };
+    
+    document.addEventListener('click', handleGlobalClick);
+
     return () => {
       vapi.off('call-start', handleCallStart)
       vapi.off('call-end', handleCallEnd)
@@ -96,8 +107,9 @@ export default function CSCKiosk() {
       vapi.off('message', handleMessage)
       vapi.off('error', handleError)
       clearTimeout(inactivityTimeout.current)
+      document.removeEventListener('click', handleGlobalClick);
     }
-  }, [vapi, isListening])
+  }, [vapi, isListening, isConnecting])
 
   const startListening = () => {
     console.log("Starting to listen");
