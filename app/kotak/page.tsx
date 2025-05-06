@@ -4,13 +4,14 @@ import { useState, useEffect, useRef } from "react"
 import Vapi from '@vapi-ai/web'
 import { Mic, MicOff } from "lucide-react"
 import Avatar from "@/components/avatar"
-import TopBar from "@/components/top-bar"
-import Carousel from "@/components/carousel"
-import VoicePanel from "@/components/voice-panel"
+import KotakTopBar from "@/components/kotak-top-bar"
+import KotakCarousel from "@/components/kotak-carousel"
+import KotakVoicePanel from "@/components/kotak-voice-panel"
 import NewsTicker from "@/components/news-ticker"
-import KotakKiosk from "./kotak/page"
+import Image from "next/image"
+import KotakNewsTicker from "@/components/kotak-news-ticker"
 
-export default function CSCKiosk() {
+export default function KotakKiosk() {
   const [isListening, setIsListening] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
@@ -18,11 +19,6 @@ export default function CSCKiosk() {
   const [currentState, setCurrentState] = useState<"default" | "connecting" | "listening" | "processing" | "response">("default")
   const [vapi] = useState(() => new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY!))
   const inactivityTimeout = useRef<NodeJS.Timeout | undefined>(undefined)
-
-
-  return (
-    <KotakKiosk />
-  )
 
   useEffect(() => {
     const handleCallStart = () => {
@@ -121,7 +117,7 @@ export default function CSCKiosk() {
     console.log("Starting to listen");
     setIsConnecting(true)
     setCurrentState("connecting")
-    vapi.start('3c7f64b9-b77b-4fa5-9c1a-69bc51070119')
+    vapi.start('be6e5b89-0124-4f6c-a911-202f123a19b7') // Note: You may want to use a different assistant ID
   }
 
   const stopListening = () => {
@@ -131,21 +127,21 @@ export default function CSCKiosk() {
 
   return (
     <main className="flex flex-col h-screen max-h-[1280px] w-full max-w-[720px] mx-auto bg-gray-50 overflow-hidden">
-      <TopBar />
+      <KotakTopBar />
 
       {/* Portrait Layout Structure */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Only show Carousel in default state */}
         {currentState === "default" && (
           <div className="w-full h-[420px] bg-white shadow-sm">
-            <Carousel />
+            <KotakCarousel />
           </div>
         )}
 
         {/* Middle Section - Content Area & Assistant */}
         <div className={`w-full ${currentState === "default" ? "flex-1" : "h-full"} bg-white overflow-hidden flex flex-col items-center justify-center`}>
           {(currentState === "connecting" || currentState === "listening" || currentState === "processing" || currentState === "response") && (
-            <VoicePanel
+            <KotakVoicePanel
               state={currentState}
               isListening={isListening}
               isProcessing={isProcessing}
@@ -156,14 +152,14 @@ export default function CSCKiosk() {
           {currentState === "default" && (
             <div className="h-full flex flex-col items-center justify-center p-4 bg-gradient-to-b from-white to-blue-50 w-full">
               <div className="text-center mb-6">
-                <h2 className="text-4xl font-bold text-gray-800 mb-2">Welcome to CSC Kiosk</h2>
-                <p className="text-xl text-gray-600 mt-2">Click the button below to start your interaction</p>
-                <p className="text-xl text-gray-600 mt-2">अपनी बातचीत शुरू करने के लिए नीचे दिए गए बटन पर क्लिक करें</p>
+                <h2 className="text-4xl font-bold text-[#ED232A] mb-2">Welcome to Kotak Mahindra Bank</h2>
+                <p className="text-xl text-gray-600 mt-2">Click anywhere to start your interaction with our virtual assistant</p>
+                <p className="text-xl text-gray-600 mt-2">अपनी बातचीत शुरू करने के लिए कहीं भी क्लिक करें</p>
               </div>
               
-              {/* Enhanced AI Assistant Container - Optimized for 720x1280 */}
+              {/* Enhanced AI Assistant Container */}
               <div className="relative w-[700px] h-[700px] flex flex-col items-center justify-center mb-4">
-                {/* Avatar wrapper with fixed size for 720x1280 */}
+                {/* Avatar wrapper with fixed size */}
                 <div className="relative w-[500px] h-[500px] z-10">
                   <Avatar />
                 </div>
@@ -171,38 +167,12 @@ export default function CSCKiosk() {
             </div>
           )}
         </div>
-
-        {/* Bottom Section - Helpdesk/Interaction */}
-        {/* <div className="w-full h-[120px] bg-gradient-to-b from-blue-50 to-white py-4 shadow-inner flex items-center justify-center">
-          <div className="flex flex-col items-center">
-            <button
-              className={`rounded-full p-5 shadow-lg flex items-center justify-center transition-all ${
-                isConnecting
-                  ? "bg-yellow-500 hover:bg-yellow-600 animate-pulse"
-                  : isListening
-                    ? "bg-red-500 hover:bg-red-600 animate-pulse"
-                    : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-              }`}
-              onClick={isListening ? stopListening : startListening}
-              disabled={isConnecting}
-            >
-              {isConnecting ? (
-                <div className="h-8 w-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
-              ) : isListening ? (
-                <Mic className="h-8 w-8 text-white" />
-              ) : (
-                <MicOff className="h-8 w-8 text-white" />
-              )}
-            </button>
-            <p className="mt-2 text-center font-medium text-sm text-gray-700">
-              {isConnecting ? "Connecting..." : isListening ? "Press to Stop" : "Press to Start"}
-            </p>
-          </div>
-        </div> */}
       </div>
 
-      {/* News Ticker at bottom */}
-      <NewsTicker />
+      {/* News Ticker - Bank specific news and updates */}
+      <div className="w-full text-white">
+        <KotakNewsTicker />
+      </div>
     </main>
   )
 }
