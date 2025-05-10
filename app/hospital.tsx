@@ -198,8 +198,8 @@ export default function SatlujaHealthcare() {
           <div className="p-6 border-b border-gray-100 bg-white">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Satluja Healthcare Assistant</h1>
-                <p className="text-gray-600">Your virtual medical consultant</p>
+                <h1 className="text-2xl font-bold text-gray-800">Satluja Hospital Receptionist</h1>
+                <p className="text-gray-600">Your virtual receptionist</p>
               </div>
               <div className="flex items-center text-gray-600 gap-3">
                 <div className="flex items-center">
@@ -241,26 +241,24 @@ export default function SatlujaHealthcare() {
               <div className="h-full flex flex-col items-center justify-center">
                 <div className="max-w-lg text-center">
                   <h2 className="text-3xl font-bold text-gray-800 mb-4">Welcome to Satluja</h2>
-                  <p className="text-lg text-gray-600 mb-2">Your AI healthcare assistant</p>
-                  <p className="text-gray-600 mb-6">I can help you with medical information, appointment scheduling, symptoms assessment, and more.</p>
                   <p className="text-gray-500 text-sm">Click anywhere or on the microphone to start talking</p>
                   
                   <div className="mt-8 grid grid-cols-2 gap-4">
                     <div className="p-4 bg-blue-50 rounded-lg text-left">
-                      <h3 className="font-semibold text-blue-700">Ask about symptoms</h3>
-                      <p className="text-sm text-gray-600">"What could cause persistent headaches?"</p>
+                      <h3 className="font-semibold text-blue-700">Check-in assistance</h3>
+                      <p className="text-sm text-gray-600">"Where do I check in for my appointment?"</p>
                     </div>
                     <div className="p-4 bg-blue-50 rounded-lg text-left">
-                      <h3 className="font-semibold text-blue-700">Medical information</h3>
-                      <p className="text-sm text-gray-600">"Tell me about diabetes management"</p>
+                      <h3 className="font-semibold text-blue-700">Department locations</h3>
+                      <p className="text-sm text-gray-600">"How do I get to the radiology department?"</p>
                     </div>
                     <div className="p-4 bg-blue-50 rounded-lg text-left">
-                      <h3 className="font-semibold text-blue-700">Appointments</h3>
-                      <p className="text-sm text-gray-600">"I need to schedule a checkup"</p>
+                      <h3 className="font-semibold text-blue-700">Appointment inquiries</h3>
+                      <p className="text-sm text-gray-600">"I'm here for Dr. Sharma at 2:30pm"</p>
                     </div>
                     <div className="p-4 bg-blue-50 rounded-lg text-left">
-                      <h3 className="font-semibold text-blue-700">Medication</h3>
-                      <p className="text-sm text-gray-600">"What are the side effects of..."</p>
+                      <h3 className="font-semibold text-blue-700">Visitor information</h3>
+                      <p className="text-sm text-gray-600">"What are the visiting hours for ICU?"</p>
                     </div>
                   </div>
                 </div>
