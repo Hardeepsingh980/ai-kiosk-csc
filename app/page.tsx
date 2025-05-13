@@ -9,6 +9,7 @@ import Carousel from "@/components/carousel"
 import VoicePanel from "@/components/voice-panel"
 import NewsTicker from "@/components/news-ticker"
 import KotakKiosk from "./kotak/page"
+import SatlujaHealthcare from "./hospital"
 
 export default function CSCKiosk() {
   const [isListening, setIsListening] = useState(false)
@@ -20,9 +21,9 @@ export default function CSCKiosk() {
   const inactivityTimeout = useRef<NodeJS.Timeout | undefined>(undefined)
 
 
-  // return (
-  //   <KotakKiosk />
-  // )
+  return (
+    <KotakKiosk />
+  )
 
   useEffect(() => {
     const handleCallStart = () => {
