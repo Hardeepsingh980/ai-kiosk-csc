@@ -21,9 +21,9 @@ export default function CSCKiosk() {
   const inactivityTimeout = useRef<NodeJS.Timeout | undefined>(undefined)
 
 
-  return (
-    <KotakKiosk />
-  )
+  // return (
+  //   <KotakKiosk />
+  // )
 
   useEffect(() => {
     const handleCallStart = () => {
